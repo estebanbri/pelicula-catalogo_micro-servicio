@@ -24,6 +24,9 @@ public class PeliculaCatalogoRecurso {
     @Autowired
     RestTemplate restTemplate;
 
+    private static final String RATING_DATA_MICROSERVICIO = "RATING-DATA-MICROSERVICIO";
+    private static final String PELICULA_INFO_MICROSERVICIO = "PELICULA-INFO-MICROSERVICIO";
+
     @GetMapping("/{id}")
     public List<CatalogoItem> getCatalogo(@PathVariable("id") String userId){
 
@@ -33,7 +36,7 @@ public class PeliculaCatalogoRecurso {
          *  INPUT: idUsuario
          *  OUTPUT: Lista<Raitings> asociado al usuario
          */
-        ResponseEntity<List<Raiting>> response = restTemplate.exchange("http://localhost:9002/raitings/usuario/"+userId,
+        ResponseEntity<List<Raiting>> response = restTemplate.exchange("http://"+RATING_DATA_MICROSERVICIO+"/raitings/usuario/"+userId,
                 HttpMethod.GET,
                 null,
                 new ParameterizedTypeReference<List<Raiting>>() {});
@@ -49,7 +52,7 @@ public class PeliculaCatalogoRecurso {
                      *  INPUT: idPelicula
                      *  OUTPUT: Lista<Pelicula> asociado al idPelicula, es decir el details de la peli
                      */
-                    Pelicula pelicula = restTemplate.getForObject("http://localhost:9001/peliculas/"+ raiting.getIdPelicula(), Pelicula.class);
+                    Pelicula pelicula = restTemplate.getForObject("http://"+PELICULA_INFO_MICROSERVICIO+"/peliculas/"+ raiting.getIdPelicula(), Pelicula.class);
 
                     // Armamos el response con los datos obtenidos de los dos call anteriores a los microservicios raiting-data-servicio y pelicula-info-service
 
